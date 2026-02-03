@@ -1,0 +1,9 @@
+## Interface: 11200
+## Title: [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r 
+## Notes: Lunatic helpers (Vanilla 1.12)
+## Author: ThePeregris
+## OptionalDeps: ItemRack, QuickHeal
+## Version: 1.0
+## Dependencies: BadAzsCore
+
+BadAzsLunaty.lua
