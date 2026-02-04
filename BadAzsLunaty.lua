@@ -3,24 +3,6 @@
 -- Vanilla 1.12 / Lua 5.0
 -- =====================================
 
-function BadAzs_PallyHasSeal()
-    local i = 1
-    while true do
-        local texture = UnitBuff("player", i)
-        if not texture then break end
-
-        -- Procura o ícone do Seal of Righteousness
-        if string.find(texture, "Ability_ThunderBolt") then
-            return true
-        end
-        i = i + 1
-    end
-    return false
-end
--- ============================================================
--- [ FIX: RACIAL HUMANA ]
--- Adicione este bloco no início do arquivo para corrigir o erro da linha 22
--- ============================================================
 function BadAzs_UseHumanRacial()
     local _, race = UnitRace("player")
     -- Se for Humano, tenta usar Perception (Detecção de Furtividade)
@@ -34,6 +16,21 @@ function BadAzs_UseHumanRacial()
             if start == 0 then CastSpellByName("Perception") end
         end
     end
+end
+
+function BadAzs_PallyHasSeal()
+    local i = 1
+    while true do
+        local texture = UnitBuff("player", i)
+        if not texture then break end
+
+        -- Procura o ícone do Seal of Righteousness
+        if string.find(texture, "Ability_ThunderBolt") then
+            return true
+        end
+        i = i + 1
+    end
+    return false
 end
 
 function BadAzs_PallySeal()
@@ -94,5 +91,4 @@ SLASH_BADSEAL1 = "/badseal"
 SlashCmdList["BADSEAL"] = BadAzs_PallySeal
 
 SLASH_BADHEAL1 = "/badheal"
-
 SlashCmdList["BADHEAL"] = BadAzs_PallyHeal
