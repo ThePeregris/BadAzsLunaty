@@ -17,6 +17,24 @@ function BadAzs_PallyHasSeal()
     end
     return false
 end
+-- ============================================================
+-- [ FIX: RACIAL HUMANA ]
+-- Adicione este bloco no início do arquivo para corrigir o erro da linha 22
+-- ============================================================
+function BadAzs_UseHumanRacial()
+    local _, race = UnitRace("player")
+    -- Se for Humano, tenta usar Perception (Detecção de Furtividade)
+    if race == "Human" then
+        -- Verifica se a função global Ready existe, senão usa checagem simples
+        if BadAzs_Ready and BadAzs_Ready("Perception") then
+            CastSpellByName("Perception")
+        elseif not BadAzs_Ready then
+            -- Fallback de segurança se o Core não estiver carregado
+            local start, _ = GetSpellCooldown(GetSpellID("Perception") or 0, "spell")
+            if start == 0 then CastSpellByName("Perception") end
+        end
+    end
+end
 
 function BadAzs_PallySeal()
     BadAzs_UseHumanRacial()     -- Chama do Core
@@ -76,4 +94,5 @@ SLASH_BADSEAL1 = "/badseal"
 SlashCmdList["BADSEAL"] = BadAzs_PallySeal
 
 SLASH_BADHEAL1 = "/badheal"
+
 SlashCmdList["BADHEAL"] = BadAzs_PallyHeal
