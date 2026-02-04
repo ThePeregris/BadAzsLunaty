@@ -1,19 +1,21 @@
+-- [[ [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r ]]
+-- Author:  ThePeregris
+-- Version: 1.4 (Uses Core Attack API)
+-- Target:  Turtle WoW (1.12 / LUA 5.0)
+
 -- =====================================
--- BADAZS LUNATY - PALADIN MODULE
--- Vanilla 1.12 / Lua 5.0
+-- LUNATY - PALADIN MODULE
 -- =====================================
 
 function BadAzs_UseHumanRacial()
     local _, race = UnitRace("player")
-    -- Se for Humano, tenta usar Perception (Detecção de Furtividade)
     if race == "Human" then
-        -- Verifica se a função global Ready existe, senão usa checagem simples
+        -- Verifica se o Core carregou a API de cooldown
         if BadAzs_Ready and BadAzs_Ready("Perception") then
             CastSpellByName("Perception")
-        elseif not BadAzs_Ready then
-            -- Fallback de segurança se o Core não estiver carregado
-            local start, _ = GetSpellCooldown(GetSpellID("Perception") or 0, "spell")
-            if start == 0 then CastSpellByName("Perception") end
+        else
+            -- Fallback
+            CastSpellByName("Perception")
         end
     end
 end
@@ -23,8 +25,6 @@ function BadAzs_PallyHasSeal()
     while true do
         local texture = UnitBuff("player", i)
         if not texture then break end
-
-        -- Procura o ícone do Seal of Righteousness
         if string.find(texture, "Ability_ThunderBolt") then
             return true
         end
@@ -34,14 +34,17 @@ function BadAzs_PallyHasSeal()
 end
 
 function BadAzs_PallySeal()
-    BadAzs_UseHumanRacial()     -- Chama do Core
-    BadAzs_EquipSet("SEAL")     -- Chama do Core
+    -- [[ INICIA ATAQUE VIA CORE API ]]
+    if BadAzs_StartAttack then BadAzs_StartAttack() end
+
+    BadAzs_UseHumanRacial()      -- Chama do Core
+    BadAzs_EquipSet("SEAL")      -- Chama do Core
 
     if not BadAzs_PallyHasSeal() then
         CastSpellByName("Seal of Righteousness")
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Seal cast")
+        -- DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Seal cast")
     else
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Seal already active")
+        -- DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Seal already active")
     end
 end
 
@@ -53,7 +56,6 @@ function BadAzs_PallyHeal()
     if IsShiftKeyDown() then
         TargetUnit("player")
         CastSpellByName("Holy Light(Rank 1)")
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Self heal (SHIFT)")
         return
     end
 
@@ -61,14 +63,12 @@ function BadAzs_PallyHeal()
     if IsControlKeyDown() and BadAzs_FocusName then
         TargetByName(BadAzs_FocusName, true)
         CastSpellByName("Holy Light(Rank 1)")
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Focus heal (CTRL)")
         return
     end
 
     -- TARGET EXISTE
     if UnitExists("target") then
         CastSpellByName("Holy Light(Rank 1)")
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Target heal")
         return
     end
 
@@ -76,14 +76,12 @@ function BadAzs_PallyHeal()
     if QuickHeal then
         ClearTarget()
         CastSpellByName("Holy Light(Rank 1)")
-        DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] QuickHeal used")
         return
     end
 
     -- FALLBACK
     TargetUnit("player")
     CastSpellByName("Holy Light(Rank 1)")
-    DEFAULT_CHAT_FRAME:AddMessage("[BadAzs Lunaty] Fallback self heal")
 end
 
 -- Novos Comandos de Chat

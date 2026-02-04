@@ -2,7 +2,7 @@
 ## Title: [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r 
 ## Notes: Lunatic helpers (Vanilla 1.12)
 ## Author: ThePeregris
-## Version: 1.0
+## Version: 1.4
 ## OptionalDeps: ItemRack, QuickHeal
 ## Dependencies: BadAzsCore
 
