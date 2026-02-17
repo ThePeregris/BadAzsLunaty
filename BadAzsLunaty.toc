@@ -1,10 +1,10 @@
 ## Interface: 11200
-## Title: [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r 
-## Notes: Lunatic helpers (Vanilla 1.12)
-## Author: ThePeregris
-## Version: 1.6
-## OptionalDeps: ItemRack, QuickHeal
+## Title: [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r
+## Notes: Lunatic helpers for Turtle-WoW Challenge (Integrated v2.1)
+## Author: ThePeregris & Gemini
+## Version: 2.1
 ## Dependencies: BadAzsCore
+## OptionalDeps: ItemRack, QuickHeal
 ## DefaultState: enable
 
 BadAzsLunaty.lua
