@@ -1,35 +1,25 @@
 -- [[ [|cff355E3BB|r]adAzs |cff32CD32Lunaty|r ]]
 -- Author:  ThePeregris
--- Version: 1.6 (Final Command Names)
+-- Version: 2.0 (Integrated)
 -- Target:  Turtle WoW (1.12 / LUA 5.0)
+-- Requires: BadAzs Core v2.0+
 
 -- =====================================
 -- LUNATY - PALADIN MODULE
 -- =====================================
 
-function BadAzs_PallyHasSeal()
-    local i = 1
-    while true do
-        local texture = UnitBuff("player", i)
-        if not texture then break end
-        if string.find(texture, "Ability_ThunderBolt") then
-            return true
-        end
-        i = i + 1
-    end
-    return false
-end
-
 function BadAzs_PallySeal()
-    -- Inicia ataque e usa racial (se existirem no Core)
-    if BadAzs_StartAttack then BadAzs_StartAttack() end
-    if BadAzs_UseRacial then BadAzs_UseRacial() end
+    -- Inicia ataque (Core function)
+    BadAzs_Cast("Attack")
     
-    -- Troca set (Protegido: se não houver ItemRack, apenas ignora)
+    -- Utilidades do Core
+    if BadAzs_UseRacial then BadAzs_UseRacial() end
     if BadAzs_EquipSet then BadAzs_EquipSet("SEAL") end
 
-    if not BadAzs_PallyHasSeal() then
-        CastSpellByName("Seal of Righteousness")
+    -- Verifica Seal usando função global do Core
+    -- "Ability_ThunderBolt" é a textura do Seal of Righteousness
+    if not BadAzs_HasBuff("Ability_ThunderBolt") then
+        BadAzs_Cast("Seal of Righteousness")
     end
 end
 
@@ -40,26 +30,26 @@ function BadAzs_PallyHeal()
     -- SHIFT = SELF
     if IsShiftKeyDown() then
         TargetUnit("player")
-        CastSpellByName("Holy Light(Rank 1)")
+        BadAzs_Cast("Holy Light(Rank 1)")
         return
     end
 
     -- CTRL = FOCUS
     if IsControlKeyDown() and BadAzs_FocusName then
         TargetByName(BadAzs_FocusName, true)
-        CastSpellByName("Holy Light(Rank 1)")
+        BadAzs_Cast("Holy Light(Rank 1)")
         return
     end
 
     -- TARGET EXISTE
     if UnitExists("target") then
-        CastSpellByName("Holy Light(Rank 1)")
+        BadAzs_Cast("Holy Light(Rank 1)")
         return
     end
 
     -- FALLBACK
     TargetUnit("player")
-    CastSpellByName("Holy Light(Rank 1)")
+    BadAzs_Cast("Holy Light(Rank 1)")
 end
 
 -- =====================================
@@ -71,27 +61,29 @@ function BadAzs_HunterCombat()
 
     if CheckInteractDistance("target", 3) == 1 then
         SpellStopCasting() 
-        if BadAzs_StartAttack then BadAzs_StartAttack() end
-        if BadAzs_Ready and BadAzs_Ready("Raptor Strike") then
-            CastSpellByName("Raptor Strike")
+        BadAzs_Cast("Attack")
+        
+        -- Raptor Strike protegido pelo Core
+        if BadAzs_Ready("Raptor Strike") then
+            BadAzs_Cast("Raptor Strike")
         end
     else
-        if BadAzs_StartAttack then BadAzs_StartAttack() end
+        BadAzs_Cast("Attack")
         CastSpellByName("Auto Shot")
     end
 end
 
 -- =====================================
--- COMMANDS REGISTRATION
+-- COMMANDS REGISTRATION (BL Prefix)
 -- =====================================
 
--- PALADIN
-SLASH_LUNPALLYSEAL1 = "/lunpallyseal"
-SlashCmdList["LUNPALLYSEAL"] = BadAzs_PallySeal
+-- PALADIN (BLPa...)
+SLASH_BLPASEAL1 = "/blpaseal"
+SlashCmdList["BLPASEAL"] = BadAzs_PallySeal
 
-SLASH_LUNPALLYHEAL1 = "/lunpallyheal"
-SlashCmdList["LUNPALLYHEAL"] = BadAzs_PallyHeal
+SLASH_BLPAHEAL1 = "/blpaheal"
+SlashCmdList["BLPAHEAL"] = BadAzs_PallyHeal
 
--- HUNTER
-SLASH_LUNHUNTER1 = "/lunhunter"
-SlashCmdList["LUNHUNTER"] = BadAzs_HunterCombat
+-- HUNTER (BLHu...)
+SLASH_BLHUNTER1 = "/blhunter"
+SlashCmdList["BLHUNTER"] = BadAzs_HunterCombat
